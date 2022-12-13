@@ -7,7 +7,7 @@
  apt-get update
 
 #Actualizamos repositorios nuevos
-#apt-get upgrade -y
+apt-get upgrade -y
 
 #Instalamos servidor web Apache
 apt-get install apache2 -y
@@ -18,8 +18,13 @@ apt-get install mysql-server -y
 #Instalamos los módulos de PHP
 apt-get install php libapache2-mod-php php-mysql -y
 
+
 cp -f ../conf/000-default.conf /etc/apache2/sites-available
 cp -f ../conf/dir.conf /etc/apache2/sites-available
+
+
+# Cambiamos la variable de dominio
+sed -i "s/DOMINIO/$DOMAIN/" /etc/apache2/sites-available/dir.conf
 
 a2enmod rewrite
 
