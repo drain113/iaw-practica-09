@@ -7,8 +7,7 @@ source variables.sh
 # CLonamos repositorio
 wget https://wordpress.org/latest.zip -O /tmp/latest.zip
 
-apt update
-apt install unzip -y
+apt-get install unzip -y
 
 rm -rf /var/www/html/wordpress
 rm -rf /var/www/html/index.html
