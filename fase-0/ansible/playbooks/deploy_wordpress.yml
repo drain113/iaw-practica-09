@@ -13,7 +13,7 @@
       - name: Descargar ultima versión wordpress
         ansible.builtin.get_url:
           url: https://wordpress.org/latest.zip
-          dest: /etc/foo.conf
+          dest: /tmp/
 
       - name: Instalar Unzip
         ansible.builtin.apt:
@@ -29,27 +29,34 @@
         ansible.builtin.file:
           path: /var/www/html/index.html
           state: absent
+          
+      - name: Extraer archivo latest.zip
+        ansible.builtin.unarchive:
+          src: /tmp/wordpress-6.1.1.zip
+          dest: /var/www/html
+          remote_src: yes
 
       - name: Copiar archivo wp-config-sample.php
         ansible.builtin.copy:
           src: /var/www/html/wordpress/wp-config-sample.php
           dest: /var/www/html/wordpress/wp-config.php
+          remote_src: yes
 
 #------------------ Seds para cambiar variables------------------#
       - name: Establecer variables de configuración DB_NAME
-        shell: sed -i "s/database_name_here/$DB_NAME/" /var/www/html/wordpress/wp-config.php
+        shell: sed -i "s/database_name_here/"{{ DB_NAME }}"/" /var/www/html/wordpress/wp-config.php
       - name: Establecer variables de configuración DB_USER
-        shell: sed -i "s/username_here/$DB_USER/" /var/www/html/wordpress/wp-config.php
+        shell: sed -i "s/username_here/"{{ DB_USER }}"/" /var/www/html/wordpress/wp-config.php
       - name: Establecer variables de configuración DB_PASSWORD
-        shell: sed -i "s/password_here/$DB_PASSWORD/" /var/www/html/wordpress/wp-config.php
+        shell: sed -i "s/password_here/"{{ DB_PASSWORD }}"/" /var/www/html/wordpress/wp-config.php
       - name: Establecer variables de configuración IP_DB
-        shell: sed -i "s/localhost/$DB_HOST_PRIVATE_IP/" /var/www/html/wordpress/wp-config.php
+        shell: sed -i "s/localhost/"{{ DB_HOST_PRIVATE_IP }}"/" /var/www/html/wordpress/wp-config.php
 
       - name: Añadir variable WP_HOME
-        shell: sed -i "s/localhost/$DB_HOST_PRIVATE_IP/" /var/www/html/wordpress/wp-config.php
+        shell: sed -i "/DB_COLLATE/a define('WP_HOME', '"{{ WP_HOME }}"');" /var/www/html/wordpress/wp-config.php
       
       - name: Añadir variable WP_SITEURL
-        shell: sed -i "s/WP_HOME/a define('WP_SITEURL', '$WP_SITEURL');" /var/www/html/wordpress/wp-config.php
+        shell: sed -i "/WP_HOME/a define('WP_SITEURL', '"{{ WP_SITEURL }}"');" /var/www/html/wordpress/wp-config.php
 
 #----------------------------------------------------------------#
 
@@ -57,6 +64,7 @@
         ansible.builtin.copy:
           src: /var/www/html/wordpress/index.php
           dest: /var/www/html/index.php
+          remote_src: yes
 
       - name: Cambiar Header php de wordpress
         shell: sed -i "s|wp-blog-header.php|wordpress/wp-blog-header.php|" /var/www/html/index.php
@@ -69,30 +77,30 @@
           recurse: true
 
 #--------------------CREACIÓN DB Y USUARIO----------------------#
-
-      - name: Eliminar DB si existe
+      - name: Borrar DB si existe
         community.mysql.mysql_db:
           name: "{{ DB_NAME }}"
           state: absent
+          login_unix_socket: /var/run/mysqld/mysqld.sock
 
-      - name: Crear DB
+      - name: Crear DB  Wordpress
         community.mysql.mysql_db:
           name: "{{ DB_NAME }}"
           state: present
-          login_unix_socket: /run/mysqld/mysqld.sock
+          login_unix_socket: /var/run/mysqld/mysqld.sock
 
-      - name: Eliminar usuario si existe
+      - name: Drop Usuario si existe
         community.mysql.mysql_user:
           name: "{{ DB_USER }}"
           host: '%'
           state: absent
-          login_unix_socket: /run/mysqld/mysqld.sock
+          login_unix_socket: /var/run/mysqld/mysqld.sock
 
-      - name: Usuario de la DB
-        community.mysql.mysql_user:
+      - name: Crear usuario DB Wordpress
+        mysql_user:
           name: "{{ DB_USER }}"
-          password: "{{ DB_PASSWORD }}"
           host: '%'
+          password: "{{ DB_PASSWORD }}"
           priv: "{{ DB_NAME }}.*:ALL"
           state: present
           login_unix_socket: /var/run/mysqld/mysqld.sock

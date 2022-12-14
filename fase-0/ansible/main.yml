@@ -1,0 +1,7 @@
+---
+- import_playbook: playbooks/install_lamp.yml
+
+- import_playbook: playbooks/deploy_wordpress.yml
+
+- import_playbook: playbooks/install_certbot.yml
+
