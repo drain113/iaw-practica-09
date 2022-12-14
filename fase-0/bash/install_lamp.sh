@@ -22,8 +22,8 @@ apt-get install php libapache2-mod-php php-mysql -y
 a2enmod rewrite
 
 # Copiamos los archivos de configuración preestablecidos y los reemplazamos por los que ya existen
-cp -f ../conf/000-default.conf /etc/apache2/sites-available
-cp -f ../conf/dir.conf /etc/apache2/mods-available
+cp -f conf/000-default.conf /etc/apache2/sites-available
+cp -f conf/dir.conf /etc/apache2/mods-available
 
 # Reiniciamos servicio Apache
 systemctl restart apache2
