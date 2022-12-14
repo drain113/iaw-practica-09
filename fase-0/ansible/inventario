@@ -1,5 +1,5 @@
 [Wordpress]
-18.232.181.68
+3.234.217.155
 
 [all:vars]
 ansible_user=ubuntu
