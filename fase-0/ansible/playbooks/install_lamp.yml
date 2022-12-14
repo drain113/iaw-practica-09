@@ -1,6 +1,6 @@
 ---
-- name: Playbook instalación Loadbalancer
-  hosts: Loadbalancer
+- name: Playbook instalación pila LAMP
+  hosts: Wordpress
   become: true
     
   tasks:
@@ -32,3 +32,25 @@
           - php
           - libapache2-mod-php
           - php-mysql
+
+      - name: Activar modulo Apache2
+        community.general.apache2_module:
+          state: present
+          name: "{{ item }}"
+        loop:
+          - rewrite
+
+      - name: Copiamos 000-default.conf template y reemplazamos en config de apache2
+        ansible.builtin.template:
+          src: ../templates/000-default.conf.j2
+          dest: /etc/apache2/sites-available
+
+      - name: Copiamos dir.conf template y reemplazamos en config de apache2
+        ansible.builtin.template:
+          src: ../templates/dir.conf.j2
+          dest: /etc/apache2/mods-available
+
+      - name: Reiniciar Apache2.4
+        service:
+          name: apache2
+          state: restarted

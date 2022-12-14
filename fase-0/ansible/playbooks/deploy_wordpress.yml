@@ -1,0 +1,105 @@
+---
+- name: Playbook deploy Wordpress
+  hosts: Wordpress
+  become: true
+    
+  tasks:
+#-----------------------------------------------------Variables---------------------------------------------#
+      - name: Variables
+        ansible.builtin.include_vars:
+          variables.yml
+#-----------------------------------------------------------------------------------------------------------#
+
+      - name: Descargar ultima versión wordpress
+        ansible.builtin.get_url:
+          url: https://wordpress.org/latest.zip
+          dest: /etc/foo.conf
+
+      - name: Instalar Unzip
+        ansible.builtin.apt:
+          name: unzip
+          state: present
+
+      - name: Eliminar carpeta wordpress
+        ansible.builtin.file:
+          path: /var/www/html/wordpress
+          state: absent
+
+      - name: Eliminar archivo index.html
+        ansible.builtin.file:
+          path: /var/www/html/index.html
+          state: absent
+
+      - name: Copiar archivo wp-config-sample.php
+        ansible.builtin.copy:
+          src: /var/www/html/wordpress/wp-config-sample.php
+          dest: /var/www/html/wordpress/wp-config.php
+
+#------------------ Seds para cambiar variables------------------#
+      - name: Establecer variables de configuración DB_NAME
+        shell: sed -i "s/database_name_here/$DB_NAME/" /var/www/html/wordpress/wp-config.php
+      - name: Establecer variables de configuración DB_USER
+        shell: sed -i "s/username_here/$DB_USER/" /var/www/html/wordpress/wp-config.php
+      - name: Establecer variables de configuración DB_PASSWORD
+        shell: sed -i "s/password_here/$DB_PASSWORD/" /var/www/html/wordpress/wp-config.php
+      - name: Establecer variables de configuración IP_DB
+        shell: sed -i "s/localhost/$DB_HOST_PRIVATE_IP/" /var/www/html/wordpress/wp-config.php
+
+      - name: Añadir variable WP_HOME
+        shell: sed -i "s/localhost/$DB_HOST_PRIVATE_IP/" /var/www/html/wordpress/wp-config.php
+      
+      - name: Añadir variable WP_SITEURL
+        shell: sed -i "s/WP_HOME/a define('WP_SITEURL', '$WP_SITEURL');" /var/www/html/wordpress/wp-config.php
+
+#----------------------------------------------------------------#
+
+      - name: Copiar el index de Wordpress
+        ansible.builtin.copy:
+          src: /var/www/html/wordpress/index.php
+          dest: /var/www/html/index.php
+
+      - name: Cambiar Header php de wordpress
+        shell: sed -i "s|wp-blog-header.php|wordpress/wp-blog-header.php|" /var/www/html/index.php
+
+      - name: Modificar propietario y grupo
+        ansible.builtin.file:
+          path: /var/www/html
+          owner: www-data
+          group: www-data
+          recurse: true
+
+#--------------------CREACIÓN DB Y USUARIO----------------------#
+
+      - name: Eliminar DB si existe
+        community.mysql.mysql_db:
+          name: "{{ DB_NAME }}"
+          state: absent
+
+      - name: Crear DB
+        community.mysql.mysql_db:
+          name: "{{ DB_NAME }}"
+          state: present
+          login_unix_socket: /run/mysqld/mysqld.sock
+
+      - name: Eliminar usuario si existe
+        community.mysql.mysql_user:
+          name: "{{ DB_USER }}"
+          host: '%'
+          state: absent
+          login_unix_socket: /run/mysqld/mysqld.sock
+
+      - name: Usuario de la DB
+        community.mysql.mysql_user:
+          name: "{{ DB_USER }}"
+          password: "{{ DB_PASSWORD }}"
+          host: '%'
+          priv: "{{ DB_NAME }}.*:ALL"
+          state: present
+          login_unix_socket: /var/run/mysqld/mysqld.sock
+
+#----------------------------------------------------------------#
+
+      - name: Reiniciar Apache2.4
+        service:
+          name: apache2
+          state: restarted

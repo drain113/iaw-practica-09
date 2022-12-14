@@ -1,0 +1,43 @@
+---
+- name: Playbook deploy Certbot
+  hosts: Wordpress
+  become: true
+    
+  tasks:
+#-----------------------------------------------------Variables---------------------------------------------#
+      - name: Variables
+        ansible.builtin.include_vars:
+          variables.yml
+#-----------------------------------------------------------------------------------------------------------#
+
+      - name: Instalar snap
+        community.general.snap:
+          name:
+            - core
+                      
+      - name: Actualizar snap
+        shell: sudo snap refresh core
+        
+      - name: Eliminamos instalaciones previas
+        ansible.builtin.apt:
+          name: certbot
+          state: absent
+ 
+      - name: Instalar Certbot
+        community.general.snap:
+          name: certbot
+          classic: true
+          
+      - name: Crear alias
+        file:
+          src: /snap/bin/certbot
+          dest: /usr/bin/certbot
+          state: link
+          
+      - name: Obtenemos el certificado
+        shell: certbot --apache --no-eff-email --agree-tos  -m test@test.es -d "{{ DOMAIN }}"
+
+      - name: Reiniciar Apache2.4
+        service:
+          name: apache2
+          state: restarted
