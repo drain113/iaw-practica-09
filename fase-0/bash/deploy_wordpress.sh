@@ -33,6 +33,8 @@ sed -i "/DB_COLLATE/a define('WP_SITEURL', '$WP_SITEURL');" /var/www/html/wordpr
 # Copiamos el index del directorio Wordpress
 cp /var/www/html/wordpress/index.php /var/www/html/index.php
 
+sed -i "s|wp-blog-header.php|wordpress/wp-blog-header.php|" /var/www/html/index.php
+
 # Modificamos el propietario y grupo
 chown www-data:www-data /var/www/html -R
 
