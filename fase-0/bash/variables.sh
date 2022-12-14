@@ -10,8 +10,8 @@ DB_PASSWORD=db_pass
 
 #--------------IP-------------#
 
-WP_HOME:http://18.232.181.68
-WP_SITEURL:http://18.232.181.68/wordpress
+WP_HOME=http://18.232.181.68
+WP_SITEURL=http://18.232.181.68/wordpress
 #-----------------------------#
 
 #------------DOMINIO----------#
