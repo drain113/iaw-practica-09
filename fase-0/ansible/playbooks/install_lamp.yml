@@ -9,3 +9,26 @@
         ansible.builtin.include_vars:
           variables.yml
 #-----------------------------------------------------------------------------------------------------------#
+
+      - name: Actualizar repositorios
+        ansible.builtin.apt:
+          update_cache: true
+
+      - name: Instalando servidor web Apache2.4
+        apt:
+          name: apache2
+          state: present
+
+      - name: Instalando sistema de base de datos MySQL
+        apt:
+          name: mysql-server
+          state: present
+
+      - name: Instalación PHP y sus módulos
+        ansible.builtin.apt:
+          name: "{{ item }}"
+          state: present
+        loop:
+          - php
+          - libapache2-mod-php
+          - php-mysql
