@@ -49,6 +49,9 @@ cp /var/www/html/wordpress/index.php /var/www/html/index.php
 # Copiamos el archivo de config php
 cp -f conf/config.php /var/www/html/config.php
 
+# Cambiamos header.php del index
+sed -i "s#wp-blog-header.php#wordpress/wp-blog-header.php#" /var/www/html/index.php
+
 # Reemplazamos variables del archivo conf
 sed -i "s/MYSQL_IP_PUB_SERVER/"{{ MYSQL_IP_PUB_SERVER }}"/" /var/www/html/config.php
 sed -i "s/lamp_db/"{{ DB_NAME }}"/" /var/www/html/config.php
