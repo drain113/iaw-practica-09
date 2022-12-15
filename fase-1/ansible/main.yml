@@ -1,4 +1,4 @@
 ---
-#- import_playbook: playbooks/deploy_backend.yml
+- import_playbook: playbooks/deploy_backend.yml
 
 - import_playbook: playbooks/deploy_frontend.yml
