@@ -1,0 +1,91 @@
+---
+- name: Playbook instalación Backend
+  hosts: Backend
+  become: true
+    
+  tasks:
+#-----------------------------------------------------Variables---------------------------------------------#
+      - name: Variables
+        ansible.builtin.include_vars:
+          variables.yml
+#-----------------------------------------------------------------------------------------------------------#
+
+#----------------------Instalar funciones backend----------------------#
+      - name: Actualizar repositorios
+        ansible.builtin.apt:
+          update_cache: true
+
+      - name: Instalando sistema de base de datos MySQL
+        apt:
+          name: mysql-server
+          state: present
+
+      - name: Instalación PHP y sus módulos
+        ansible.builtin.apt:
+          name: "{{ item }}"
+          state: present
+        loop:
+          - php
+          - libapache2-mod-php
+          - php-mysql
+
+      - name: Instalar Python3
+        ansible.builtin.apt:
+          name: python3-pip
+          state: present
+
+      - name: Módulo PyMySQL
+        ansible.builtin.pip:
+          name: pymysql
+          state: present
+
+      - name: Reiniciar Mysql
+        service: 
+          name: mysql.service
+          state: started
+
+      - name: Modificar archivos de MySQL
+        ansible.builtin.replace:
+          path: /etc/mysql/mysql.conf.d/mysqld.cnf
+          regexp: 127.0.0.1
+          replace: 0.0.0.0
+
+      - name: Reiniciar Mysql
+        service: 
+          name: mysql.service
+          state: restarted
+
+#----------------------------------------------------------------------#
+
+#--------------------------------Instalar DB---------------------------#
+
+      - name: Borrar DB si existe
+        community.mysql.mysql_db:
+          name: "{{ DB_NAME }}"
+          state: absent
+          login_unix_socket: /var/run/mysqld/mysqld.sock
+
+      - name: Crear DB  Wordpress
+        community.mysql.mysql_db:
+          name: "{{ DB_NAME }}"
+          state: present
+          login_unix_socket: /var/run/mysqld/mysqld.sock
+
+      - name: Drop Usuario si existe
+        community.mysql.mysql_user:
+          name: "{{ DB_USER }}"
+          host: '%'
+          state: absent
+          login_unix_socket: /var/run/mysqld/mysqld.sock
+
+      - name: Crear usuario DB Wordpress
+        mysql_user:
+          name: "{{ DB_USER }}"
+          host: '%'
+          password: "{{ DB_PASSWORD }}"
+          priv: "{{ DB_NAME }}.*:ALL"
+          state: present
+          login_unix_socket: /var/run/mysqld/mysqld.sock
+
+#----------------------------------------------------------------------#
+

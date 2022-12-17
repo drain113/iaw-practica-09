@@ -1,1 +1,1 @@
-/var/www/html IP_NFS_1(rw,sync,no_root_squash,no_subtree_check) IP_NFS_2(rw,sync,no_root_squash,no_subtree_check)
+/var/www/html IP_HTTP_SERVER_1(rw,sync,no_root_squash,no_subtree_check) IP_HTTP_SERVER_2(rw,sync,no_root_squash,no_subtree_check)

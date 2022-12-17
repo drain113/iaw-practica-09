@@ -30,7 +30,7 @@ cp -f conf/000-default-bal.conf /etc/apache2/sites-available/000-default.conf
 # Reemplazamos las variables del archivo de config
 sed -i "s/IP_HTTP_SERVER_1/$IP_HTTP_SERVER_1/" /etc/apache2/sites-available/000-default.conf
 sed -i "s/IP_HTTP_SERVER_2/$IP_HTTP_SERVER_2/" /etc/apache2/sites-available/000-default.conf
-sed -i "s/IP_HTTP_SERVER_3/$IP_HTTP_SERVER_3/" /etc/apache2/sites-available/000-default.conf
+#sed -i "s/IP_HTTP_SERVER_3/$IP_HTTP_SERVER_3/" /etc/apache2/sites-available/000-default.conf
 
 
 #----------------------------------------------------------------------#

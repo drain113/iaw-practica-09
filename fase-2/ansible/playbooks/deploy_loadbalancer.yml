@@ -1,0 +1,72 @@
+---
+- name: Playbook instalación Loadbalancer
+  hosts: Loadbalancer
+  become: true
+    
+  tasks:
+#-----------------------------------------------------Variables---------------------------------------------#
+      - name: Variables
+        ansible.builtin.include_vars:
+          variables.yml
+#-----------------------------------------------------------------------------------------------------------#
+      - name: Actualizar repositorios
+        ansible.builtin.apt:
+          update_cache: true
+
+      - name: Instalando servidor web Apache2.4
+        apt:
+          name: apache2
+          state: present
+
+      - name: Activar modulo Apache2
+        community.general.apache2_module:
+          state: present
+          name: "{{ item }}"
+        loop:
+          - proxy
+          - proxy_http
+          - proxy_ajp
+          - rewrite 
+          - deflate
+          - headers
+          - proxy_balancer
+          - proxy_connect
+          - proxy_html
+          - lbmethod_byrequests
+
+      - name: Cambiar archivo por template local
+        ansible.builtin.template:
+          src: ../templates/000-default-bal.conf.j2
+          dest: /etc/apache2/sites-available/000-default.conf
+
+      - name: Instalar snap
+        community.general.snap:
+          name:
+            - core
+                      
+      - name: Actualizar snap
+        shell: sudo snap refresh core
+        
+      - name: Eliminamos instalaciones previas
+        ansible.builtin.apt:
+          name: certbot
+          state: absent
+ 
+      - name: Instalar Certbot
+        community.general.snap:
+          name: certbot
+          classic: true
+          
+      - name: Crear alias
+        file:
+          src: /snap/bin/certbot
+          dest: /usr/bin/certbot
+          state: link
+          
+      - name: Obtenemos el certificado
+        shell: certbot --apache --no-eff-email --agree-tos  -m test@test.es -d "{{ DOMAIN }}"
+
+      - name: Reiniciar Apache2.4
+        service:
+          name: apache2
+          state: restarted

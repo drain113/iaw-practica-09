@@ -1,0 +1,38 @@
+---
+- name: Playbook instalación servidor NFS
+  hosts: NFS
+  become: true
+    
+  tasks:
+#-----------------------------------------------------Variables---------------------------------------------#
+      - name: Variables
+        ansible.builtin.include_vars:
+          variables.yml
+#-----------------------------------------------------------------------------------------------------------#
+
+      - name: Actualizar repositorios
+        ansible.builtin.apt:
+          update_cache: true
+
+      - name: Instalando servidor NFS
+        apt:
+          name: nfs-kernel-server
+          state: present
+
+      - name: Crear el directorio a compartir
+        ansible.builtin.file:
+          path: /var/www/html
+          state: directory
+          mode: 0755
+          owner: nobody
+          group: nogroup
+
+      - name: Cambiar archivo por template local
+        ansible.builtin.template:
+          src: ../templates/exports.j2
+          dest: /etc/exports
+
+      - name: Reiniciar servidor NFS
+        ansible.builtin.service:
+          name: nfs-kernel-server
+          state: restarted

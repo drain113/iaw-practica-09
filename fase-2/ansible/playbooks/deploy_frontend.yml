@@ -1,0 +1,78 @@
+---
+- name: Playbook instalación Frontend
+  hosts: Frontend
+  become: true
+    
+  tasks:
+#-----------------------------------------------------Variables---------------------------------------------#
+      - name: Variables
+        ansible.builtin.include_vars:
+          variables.yml
+#-----------------------------------------------------------------------------------------------------------#
+
+#----------------------Instalar funciones Frontend----------------------#
+      - name: Actualizar repositorios
+        ansible.builtin.apt:
+          update_cache: true
+
+      - name: Instalando servidor web Apache2.4
+        apt:
+          name: apache2
+          state: present
+
+      - name: Instalación PHP y sus módulos
+        ansible.builtin.apt:
+          name: "{{ item }}"
+          state: present
+        loop:
+          - php
+          - libapache2-mod-php
+          - php-mysql
+
+      - name: Instalar Python3
+        ansible.builtin.apt:
+          name: python3-pip
+          state: present
+
+      - name: Instalar Unzip
+        ansible.builtin.apt:
+          name: unzip
+          state: present
+
+      - name: Activar módulo rewrite
+        community.general.apache2_module:
+          state: present
+          name: rewrite
+
+      - name: Copiamos 000-default.conf template y reemplazamos en config de apache2
+        ansible.builtin.template:
+          src: ../templates/000-default.conf.j2
+          dest: /etc/apache2/sites-available
+
+      - name: Copiamos dir.conf template y reemplazamos en config de apache2
+        ansible.builtin.template:
+          src: ../templates/dir.conf.j2
+          dest: /etc/apache2/mods-available
+#----------------------------------------------------------------------#
+
+#---------------------------Cliente NFS--------------------------------#
+      - name: Instalar Nfs-Common
+        apt:
+          name: nfs-common
+          state: present
+
+      - name: Montamos NFS
+        ansible.posix.mount:
+          src: "{{ IP_SERV_NFS }}:/var/www/html"
+          path: /var/www/html
+          state: mounted
+          fstype: nfs
+          opts: rw,sync,hard
+
+      # - name: Montamos NFS
+      #   bash: mount "{{ IP_SERV_NFS }}":/var/www/html /var/www/html
+
+      - name: Editamos fstab
+        shell: echo ""{{ IP_SERV_NFS }}":/var/www/html /var/www/html nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0" >> /etc/fstab
+
+#----------------------------------------------------------------------#

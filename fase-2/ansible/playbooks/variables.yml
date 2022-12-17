@@ -1,0 +1,26 @@
+---
+# Variables
+
+#--------------DB-------------#
+DB_HOST: "172.31.66.112"
+DB_NAME: "db_name"
+DB_USER: "db_user"
+DB_PASSWORD: "db_pass"
+#-----------------------------#
+
+#--------------IP-------------#
+WP_HOME: "https://guillelucki"
+WP_SITEURL: "https://guillelucki/wordpress"
+#-----------------------------#
+
+#------------DOMINIO----------#
+EMAIL: "gmonmar2408@g.educaand.es"
+DOMAIN: "guillelucki.ddns.net"
+#-----------------------------#
+
+#----------IP frontend--------#
+IP_HTTP_SERVER_1: "172.31.70.5"
+IP_HTTP_SERVER_2: "172.31.79.153"
+IP_SERV_NFS: "172.31.66.204"
+DIRECCIONES: "172.31.0.0/16"
+#-----------------------------#

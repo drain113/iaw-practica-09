@@ -20,8 +20,8 @@ chown nobody:nogroup /var/www/html
 # Editamos /etc/exports
 cp conf/exports /etc/exports
 
-sed -i "s#IP_NFS_1#$IP_NFS_1#" /etc/exports
-sed -i "s#IP_NFS_2#$IP_NFS_2#" /etc/exports
+sed -i "s#IP_HTTP_SERVER_1#$IP_HTTP_SERVER_1#" /etc/exports
+sed -i "s#IP_HTTP_SERVER_2#$IP_HTTP_SERVER_2#" /etc/exports
 
 #----------------------------------------------------------------------#
 
