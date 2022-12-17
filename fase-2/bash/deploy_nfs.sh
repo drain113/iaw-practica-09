@@ -18,7 +18,7 @@ mkdir -p /var/www/html
 chown nobody:nogroup /var/www/html
 
 # Editamos /etc/exports
-cp /conf/exports /etc/exports
+cp conf/exports /etc/exports
 sed -i "s/IP_NFS/$IP_NFS/" /etc/exports
 
 #----------------------------------------------------------------------#
