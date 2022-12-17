@@ -17,3 +17,8 @@ IP_NFS_1=172.31.73.142/24
 IP_NFS_2=172.31.71.236/24
 #  Servidor NFS
 IP_SERV_NFS=172.31.72.85
+
+
+# Certbot
+EMAIL=test@test.es
+DOMAIN=guillemoncler.ddns.net
