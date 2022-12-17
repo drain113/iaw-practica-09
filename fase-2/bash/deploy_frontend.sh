@@ -53,13 +53,13 @@ chown www-data:www-data /var/www/html -R
 #----------------------------------------------------------------------#
 
 #------------------------Instalar Cliente NFS--------------------------#
-sudo apt-get install nfs-common
+sudo apt-get install nfs-common -y
 
 # Montamos NFS SERVER en la máquina cliente
-mount $IP_NFS:/var/www/html /var/www/html
+mount $IP_SERV_NFS:/var/www/html /var/www/html
 
 # Editamos /etc/fstab
-echo "$IP_SERV_NFS:/var/www/html /var/www/html nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0" >> fstab
+echo "$IP_SERV_NFS:/var/www/html /var/www/html nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0" >> /etc/fstab
 
 #----------------------------------------------------------------------#
 # Reinicio servicio apache2
