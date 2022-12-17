@@ -31,8 +31,8 @@ cp -f conf/000-default-bal.conf /etc/apache2/sites-available/000-default.conf
 sed -i "s/IP_HTTP_SERVER_1/$IP_HTTP_SERVER_1/" /etc/apache2/sites-available/000-default.conf
 sed -i "s/IP_HTTP_SERVER_2/$IP_HTTP_SERVER_2/" /etc/apache2/sites-available/000-default.conf
 
-# Reiniciamos servicio Apache2
-systemctl restart apache2
+
+#----------------------------------------------------------------------#
 
 # Realizamos la instalación y actualización de snapd.
 snap install core; snap refresh core 
@@ -48,3 +48,6 @@ ln -s /snap/bin/certbot /usr/bin/certbot
 
 #Obtenemos el certificado y configuramos el servidor web Apache.
 certbot --apache -m $EMAIL --agree-tos --no-eff-email  -d $DOMAIN 
+
+# Reiniciamos servicio Apache2
+systemctl restart apache2
