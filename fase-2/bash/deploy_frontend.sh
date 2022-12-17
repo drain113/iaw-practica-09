@@ -34,6 +34,15 @@ cp /conf/000-default.conf /etc/apache2/sites-available
 # Copia del archivo dir.conf
 cp /conf/dir.conf /etc/apache2/mods-available
 
+# Copiamos el archivo de config php
+cp -f conf/config.php /var/www/html/config.php
+
+# Reemplazamos variables del archivo conf
+sed -i "s/MYSQL_IP_PUB_SERVER/$DB_HOST/" /var/www/html/config.php
+sed -i "s/lamp_db/$DB_NAME/" /var/www/html/config.php
+sed -i "s/lamp_user/$DB_USER/" /var/www/html/config.php
+sed -i "s/lamp_pass/$DB_PASSWORD/" /var/www/html/config.php
+
 # Copiar archivo de config de ejemplo
 cp /var/www/html/wordpress/wp-config-sample.php /var/www/html/wordpress/wp-config.php
 
