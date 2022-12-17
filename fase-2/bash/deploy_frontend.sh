@@ -29,10 +29,10 @@ rm -rf /var/www/html/index.html
 unzip /tmp/latest.zip -d /var/www/html
 
 # Copia del archivo 000-default.conf
-cp /conf/000-default.conf /etc/apache2/sites-available
+cp conf/000-default.conf /etc/apache2/sites-available
 
 # Copia del archivo dir.conf
-cp /conf/dir.conf /etc/apache2/mods-available
+cp conf/dir.conf /etc/apache2/mods-available
 
 # Copiamos el archivo de config php
 cp -f conf/config.php /var/www/html/config.php
