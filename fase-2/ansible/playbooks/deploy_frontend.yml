@@ -76,3 +76,8 @@
         shell: echo ""{{ IP_SERV_NFS }}":/var/www/html /var/www/html nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0" >> /etc/fstab
 
 #----------------------------------------------------------------------#
+
+      - name: Reiniciar Apache2.4
+        service:
+          name: apache2
+          state: restarted
