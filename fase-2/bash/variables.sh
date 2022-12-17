@@ -11,6 +11,7 @@ WP_SITEURL=https://guillemoncler/wordpress
 # Variables Load Balancer
 IP_HTTP_SERVER_1=172.31.73.142
 IP_HTTP_SERVER_2=172.31.71.236
+IP_HTTP_SERVER_3=172.31.72.85
 
 #  Cliente NFS
 IP_NFS_1=172.31.73.142/24
