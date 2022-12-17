@@ -9,7 +9,10 @@ source variables.sh
 apt-get update
 
 # Instalamos el servidor NFS
-apt-get install nfs-kernel-server
+apt-get install nfs-kernel-server -y
+
+# Crear el directorio a compartir
+mkdir -p /var/www/html
 
 # Cambiamos los permiosos al directorio a compartir
 chown nobody:nogroup /var/www/html
