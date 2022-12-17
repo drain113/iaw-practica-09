@@ -48,7 +48,7 @@ cp /var/www/html/wordpress/index.php /var/www/html/index.php
 
 # Cambiamos header.php del index
 sed -i "s#wp-blog-header.php#wordpress/wp-blog-header.php#" /var/www/html/index.php
-
+sed -i "/WP_HOME/a $_SERVER['HTTPS'] = 'on';" /var/www/html/wordpress/wp-config.php
 chown www-data:www-data /var/www/html -R
 #----------------------------------------------------------------------#
 
