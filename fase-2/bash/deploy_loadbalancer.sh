@@ -13,7 +13,7 @@ apt install apache2 -y
 
 # Activamos los módulos para configurar Apache como proxy inverso
 a2enmod proxy
-a2enmod pyoxy_http
+a2enmod proxy_http
 a2enmod proxy_ajp
 a2enmod rewrite 
 a2enmod deflate
