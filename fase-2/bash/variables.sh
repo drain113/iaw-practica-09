@@ -5,7 +5,7 @@ DB_USER=wp_user
 DB_PASSWORD=wp_password
 
 # Variables configuración hosts WP
-WP_HOME=http://44.192.48.92
+WP_HOME=http://guillemoncler
 WP_SITEURL=http://44.192.48.92/wordpress
 
 # Variables Load Balancer
