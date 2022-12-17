@@ -53,22 +53,29 @@
       - name: Establecer variables de configuración IP_DB
         shell: sed -i "s/localhost/"{{ DB_HOST }}"/" /var/www/html/wordpress/wp-config.php
 
-      - name: Añadir variable WP_HOME
-        shell: sed -i "/DB_COLLATE/a define('WP_HOME', '"{{ WP_HOME }}"');" /var/www/html/wordpress/wp-config.php
-      
-      - name: Añadir variable WP_SITEURL
-        shell: sed -i "/WP_HOME/a define('WP_SITEURL', '"{{ WP_SITEURL }}"');" /var/www/html/wordpress/wp-config.php
-
-#----------------------------------------------------------------#
       - name: Copiar el index de Wordpress
         ansible.builtin.copy:
           src: /var/www/html/wordpress/index.php
           dest: /var/www/html/index.php
           remote_src: yes
+
+      - name: Modificar el archivo wp-config.php
+        ansible.builtin.blockinfile:
+          path: /var/www/html/wordpress/wp-config.php
+          insertafter: DB_COLLATE
+          block: |
+            define('WP_HOME', '{{ WP_HOME }}');
+            define('WP_SITEURL', '{{ WP_SITEURL }}');
+
+#----------------------------------------------------------------#
+
           
-      - name: Cambiar Header php de wordpress
-        shell: sed -i "s|wp-blog-header.php|wordpress/wp-blog-header.php|" /var/www/html/index.php
-      
+      - name: Modificación del archivo index.php
+        ansible.builtin.replace:
+          path: /var/www/html/index.php
+          regexp: wp-blog-header.php
+          replace: wordpress/wp-blog-header.php
+
       - name:  Cambiar función HTTPS de wp-config.php
         shell: sed -i "/WP_HOME/a $_SERVER['HTTPS'] = 'on';" /var/www/html/wordpress/wp-config.php
 

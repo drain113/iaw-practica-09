@@ -9,8 +9,8 @@ DB_PASSWORD: "db_pass"
 #-----------------------------#
 
 #--------------IP-------------#
-WP_HOME: "https://guillelucki"
-WP_SITEURL: "https://guillelucki/wordpress"
+WP_HOME: "https://guillelucki.ddns.net"
+WP_SITEURL: "https://guillelucki.ddns.net"
 #-----------------------------#
 
 #------------DOMINIO----------#

@@ -1,10 +1,10 @@
 ---
-- import_playbook: playbooks/deploy_backend.yml
+# - import_playbook: playbooks/deploy_backend.yml
 
-- import_playbook: playbooks/deploy_loadbalancer.yml
+# - import_playbook: playbooks/deploy_loadbalancer.yml
 
-- import_playbook: playbooks/deploy_nfs.yml
+# - import_playbook: playbooks/deploy_nfs.yml
 
-- import_playbook: playbooks/deploy_frontend.yml
+# - import_playbook: playbooks/deploy_frontend.yml
 
 - import_playbook: playbooks/deploy_wordpress.yml
